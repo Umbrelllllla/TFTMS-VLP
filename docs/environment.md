@@ -1,5 +1,9 @@
 # 环境说明
 
+2026-10-17：独立Qwen环境新增 `peft==0.21.2` 用于LoRA训练，其他已装依赖版本保持不变。训练依赖清单在 `scripts/qwen2b/requirements-train.txt`；本机完整版本快照在 `runs/qwen2b_setup/training.freeze.txt`。训练试跑入口及资源结果见 `docs/status.md`。基础项目环境不变。
+
+> 2026-10-15：下文描述基础项目环境。Qwen3.5-2B 使用独立 `.venv-qwen2b`，准备状态、固定依赖及专用安装命令见 [本机环境准备](qwen2b_local.md)。基础 `.venv` 和根项目依赖保持不变。
+
 - Python 要求：`>=3.10`。
 - 环境与依赖管理：uv。
 - 已生成 `pyproject.toml` 和 `uv.lock`，项目名称由 uv 生成为 `tftms-vlp`。
