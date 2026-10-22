@@ -1,5 +1,6 @@
 """Resumable A inference on official test inputs; validate result/*.txt and ZIP."""
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -90,7 +91,15 @@ def prepare():
 def verify_sources(manifest):
     assert {p.name for p in RAW.glob('*.json')}=={e['file'] for e in manifest['files']}
     assert sup.digest(FEATURE_SCRIPT)==manifest['feature_script_sha256']
-    assert sup.digest(ROOT/'scripts/qwen2b/run_ab.py')==manifest['prompt_script_sha256']
+    prompt_path=ROOT/'scripts/qwen2b/run_ab.py'
+    prompt_bytes=prompt_path.read_bytes()
+    raw_hash=hashlib.sha256(prompt_bytes).hexdigest()
+    lf_hash=hashlib.sha256(prompt_bytes.replace(b'\r\n',b'\n')).hexdigest()
+    # Git on Windows can change only line endings after checkout. Python reads
+    # both with universal newlines; accept only an exact match after CRLF->LF.
+    assert manifest['prompt_script_sha256'] in (raw_hash,lf_hash)
+    atomic(OUT/'prompt_source_verification.json',{'expected_sha256':manifest['prompt_script_sha256'],
+           'raw_sha256':raw_hash,'lf_sha256':lf_hash,'crlf_only_change':raw_hash!=manifest['prompt_script_sha256']})
     for name,digest in manifest['adapter_sha256'].items(): assert sup.digest(ADAPTER/name)==digest
     for e in manifest['files']: assert sup.digest(RAW/e['file'])==e['sha256']
 
