@@ -18,3 +18,12 @@ runs/*
 *.safetensors
 checkpoint/
 checkpoints/
+
+# 竞赛提交产物（zip 与解压目录）
+result*.zip
+result*/
+
+# 本地笔记（Obsidian）
+.obsidian/
+VLMOD/
+~$*.docx
