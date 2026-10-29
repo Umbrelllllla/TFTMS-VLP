@@ -1,5 +1,7 @@
 # Python 环境与缓存
 .venv/
+.venv-qwen2b/
+.cache/
 __pycache__/
 *.py[cod]
 
